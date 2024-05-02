@@ -1,0 +1,71 @@
+// Magazine class
+class Magazine extends LendingLibrary {
+    private int volume;
+    private int issueNo;
+
+    // Constructor
+    public Magazine(String title, double rentalFee, int volume, int issueNo) {
+        super(title, rentalFee);
+        this.volume = volume;
+        this.issueNo = issueNo;
+    }
+
+    // Override method to calculate dueTime
+    @Override
+    public void calculateDueTime() {
+        // Due time is set by adding 24 hours to acquisition time
+        int hrs = acquisitionTime.getHr() + 24;
+        int mins = acquisitionTime.getMin();
+        int secs = acquisitionTime.getSecs();
+        dueTime = new Time(secs, mins, hrs);
+    }
+
+    // Override method to calculate fine
+    @Override
+    public double calculateFine(Time returnTime) {
+        double fineAmount = 0;
+        if (returnTime.getHr() > dueTime.getHr() ||
+                (returnTime.getHr() == dueTime.getHr() && returnTime.getMin() > dueTime.getMin()) ||
+                (returnTime.getHr() == dueTime.getHr() && returnTime.getMin() == dueTime.getMin() && returnTime.getSecs() > dueTime.getSecs())) {
+            // Calculate fine if returned after dueTime
+            fineAmount = fine;
+        }
+        return fineAmount;
+    }
+
+    // toString method to display details
+    public String toString() {
+        return "Title: " + title + ", Rental Fee: $" + rentalFee + ", Acquisition Time: " +
+                acquisitionTime.getHr() + ":" + acquisitionTime.getMin() + ":" + acquisitionTime.getSecs() +
+                ", Due Time: " + dueTime.getHr() + ":" + dueTime.getMin() + ":" + dueTime.getSecs() +
+                ", Checked Out: " + checkOut + ", Volume: " + volume + ", Issue No: " + issueNo;
+    }
+}
+
+// Test Application
+public class TestLibrary {
+    public static void main(String[] args) {
+        // Creating a magazine instance
+        Magazine magazine = new Magazine("National Geographic", 5.0, 10, 3);
+
+        // Issue the magazine
+        Time currentTime = new Time(12, 0, 0); // Current time
+        magazine.issue(currentTime);
+
+        // Calculate due time
+        magazine.calculateDueTime();
+
+        // Display magazine details
+        System.out.println("Magazine details after issuing:");
+        System.out.println(magazine);
+
+        // Returning the magazine
+        Time returnTime = new Time(12, 30, 0); // Returning time
+        magazine.returnBook(returnTime);
+
+        // Display magazine details after returning
+        System.out.println("\nMagazine details after returning:");
+        System.out.println(magazine);
+    }
+}
+

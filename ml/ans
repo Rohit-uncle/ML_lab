@@ -1,0 +1,95 @@
+// Time class
+class Time {
+    private int secs;
+    private int min;
+    private int hr;
+    // Constructor
+    public Time(int secs, int min, int hr) {
+        this.secs = secs;
+        this.min = min;
+        this.hr = hr;
+    }
+    // Accessor methods
+    public int getSecs() {
+        return secs;
+    }
+    public int getMin() {
+        return min;
+    }
+    public int getHr() {
+        return hr;
+    }
+}
+
+// Interface Invoice
+interface Invoice {
+    double fine = 5; // Constant fine
+    double calculateFine(Time currentTime);
+}
+
+// Abstract class LendingLibrary
+abstract class LendingLibrary implements Invoice {
+    protected String title;
+    protected Time acquisitionTime;
+    protected double rentalFee;
+    protected Time dueTime;
+    protected boolean checkOut;
+
+    // Constructor
+    public LendingLibrary(String title, double rentalFee) {
+        this.title = title;
+        this.rentalFee = rentalFee;
+        this.acquisitionTime = new Time(0, 0, 0); // Default value for acquisitionTime
+        this.dueTime = new Time(0, 0, 0); // Default value for dueTime
+        this.checkOut = false;
+    }
+
+    // Issue method
+    public void issue(Time currentTime) {
+        this.acquisitionTime = currentTime;
+        this.checkOut = true;
+    }
+    // Return method
+    public void returnBook(Time currentTime) {
+        this.checkOut = false;
+        if (currentTime.getHr() > dueTime.getHr() ||
+                (currentTime.getHr() == dueTime.getHr() && currentTime.getMin() > dueTime.getMin()) ||
+                (currentTime.getHr() == dueTime.getHr() && currentTime.getMin() == dueTime.getMin() && currentTime.getSecs() > dueTime.getSecs())) {
+            // Calculate fine if returned after dueTime
+            double fineAmount = calculateFine(currentTime);
+            rentalFee += fineAmount;
+        }
+    }
+    // Abstract method to calculate dueTime
+    public abstract void calculateDueTime();
+    // toString method to display details
+    public String toString() {
+        return "Title: " + title + ", Rental Fee: $" + rentalFee + ", Acquisition Time: " +
+                acquisitionTime.getHr() + ":" + acquisitionTime.getMin() + ":" + acquisitionTime.getSecs() +
+                ", Due Time: " + dueTime.getHr() + ":" + dueTime.getMin() + ":" + dueTime.getSecs() +
+                ", Checked Out: " + checkOut;
+    }
+}
+
+// Test Application
+public class TestLibrary {
+    public static void main(String[] args) {
+        // Creating a book instance
+        Book book = new Book("The Great Gatsby", 10.0);
+        // Issue the book
+        Time currentTime = new Time(10, 30, 0); // Current time
+        book.issue(currentTime);
+        // Calculate due time
+        book.calculateDueTime();
+        // Display book details
+        System.out.println("Book details after issuing:");
+        System.out.println(book);
+        // Returning the book
+        Time returnTime = new Time(11, 0, 0); // Returning time
+        book.returnBook(returnTime);
+        // Display book details after returning
+        System.out.println("\nBook details after returning:");
+        System.out.println(book);
+    }
+}
+

@@ -1,0 +1,9 @@
+EducationalQualification,ExpOver5Years,Technical,Gender,MaritalStatus,Eligibility
+pg,yes,good,Female,Married,yes
+pg,yes,good,Male,Single,yes
+ug,no,good,Female,Married,No
+pg,no,bad,Female,Single,No
+pg,no,good,Male,Married,No
+ug,yes,good,Female,Widow,No
+ug,yes,bad,Male,Widow,No
+ug,no,good,Female,Male,No
